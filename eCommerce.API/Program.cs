@@ -24,6 +24,22 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddAutoMapper(cfg => { }, typeof(ApplicationUserMappingProfile).Assembly);
 
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+
+// Add Swagger generation
+builder.Services.AddSwaggerGen();
+
+// Add CORS policy
+builder.Services.AddCors(opt =>
+{
+    opt.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // Frontend URL
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -33,6 +49,13 @@ app.UseExceptionHandlingMiddleware();
 
 // Route requests to controllers
 app.UseRouting();
+
+// Enable Swagger 
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// Enable CORS
+app.UseCors();
 
 // Enable authentication and authorization
 app.UseAuthentication();
